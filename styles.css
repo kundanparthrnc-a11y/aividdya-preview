@@ -284,3 +284,26 @@ footer{
   display:flex;justify-content:space-between;align-items:center;
   font-size:13px;color:#6b8a99;flex-wrap:wrap;gap:10px;
 }
+
+/* === Contact form dark card fix (2026-10-14) === */
+.form{background:#0c1622 !important;border:1px solid rgba(135,181,201,.2)}
+.form h3{color:#ffffff !important}
+.form label{color:#a9bdc9 !important}
+.form input,.form select,.form textarea{
+  background:#ffffff !important;color:#0d3f4f !important;
+  border:1px solid #d7e8f0 !important;
+}
+.form input::placeholder,.form textarea::placeholder{color:#8aa0b4}
+/* Stronger autofill - force white bg and dark text */
+.form input:-webkit-autofill,
+.form input:-webkit-autofill:hover,
+.form input:-webkit-autofill:focus,
+.form input:-webkit-autofill:active{
+  -webkit-text-fill-color:#0d3f4f !important;
+  -webkit-box-shadow:0 0 0 1000px #ffffff inset !important;
+  box-shadow:0 0 0 1000px #ffffff inset !important;
+  background-color:#ffffff !important;
+  color:#0d3f4f !important;
+}
+.form .form-note{color:#8fa5b3 !important}
+.form .btn{color:#fff}
