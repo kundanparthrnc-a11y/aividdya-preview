@@ -281,7 +281,7 @@ var allJobs=[];
 async function loadJobs(){
   var tb=document.getElementById('jobsTbl');
   try{
-    var r=await sb.from('jobs').select('id,title,company_name,location,status,created_at').order('created_at',{ascending:false}).limit(200);
+    var r=await sb.from('jobs').select('id,title,company,location,status,created_at').order('created_at',{ascending:false}).limit(200);
     if(r.error)throw r.error;
     allJobs=r.data;renderJobs();
   }catch(e){tb.innerHTML='<tr><td colspan="6" style="color:#ef4444">Error: '+esc(e.message)+'</td></tr>';}
@@ -289,14 +289,14 @@ async function loadJobs(){
 function renderJobs(){
   var f=document.getElementById('jobFilter').value,q=document.getElementById('jobSearch').value.toLowerCase();
   var rows=allJobs.filter(function(j){
-    return (f==='all'||j.status===f)&&(!q||(j.title+' '+j.company_name).toLowerCase().includes(q));
+    return (f==='all'||j.status===f)&&(!q||(j.title+' '+j.company).toLowerCase().includes(q));
   });
   document.getElementById('jobsTbl').innerHTML=rows.length?rows.map(function(j){
     var act=j.status==='pending'
       ?'<button class="btn btn-ok btn-s" onclick="modJob(\''+j.id+'\',\'approved\')">✓ Approve</button> <button class="btn btn-no btn-s" onclick="modJob(\''+j.id+'\',\'rejected\')">✕ Reject</button>'
       :j.status==='approved'?'<button class="btn btn-no btn-s" onclick="modJob(\''+j.id+'\',\'rejected\')">Remove</button>'
       :'<button class="btn btn-ok btn-s" onclick="modJob(\''+j.id+'\',\'approved\')">Restore</button>';
-    return '<tr><td><strong>'+esc(j.title)+'</strong></td><td>'+esc(j.company_name||'—')+'</td><td>'+esc(j.location||'—')+'</td><td>'+dstr(j.created_at)+'</td><td><span class="pill '+j.status+'">'+j.status+'</span></td><td style="white-space:nowrap">'+act+'</td></tr>';
+    return '<tr><td><strong>'+esc(j.title)+'</strong></td><td>'+esc(j.company||'—')+'</td><td>'+esc(j.location||'—')+'</td><td>'+dstr(j.created_at)+'</td><td><span class="pill '+j.status+'">'+j.status+'</span></td><td style="white-space:nowrap">'+act+'</td></tr>';
   }).join(''):'<tr><td colspan="6"><div class="empty"><div class="ic">📭</div>No jobs found.</div></td></tr>';
 }
 async function modJob(id,st){
@@ -363,10 +363,10 @@ async function loadApps(){
     if(!r.data.length){tb.innerHTML='<tr><td colspan="5"><div class="empty">No applications yet.</div></td></tr>';return;}
     var jids=[...new Set(r.data.map(function(a){return a.job_id;}))];
     var jm={};
-    if(jids.length){var jr=await sb.from('jobs').select('id,title,company_name').in('id',jids);if(jr.data)jr.data.forEach(function(j){jm[j.id]=j;});}
+    if(jids.length){var jr=await sb.from('jobs').select('id,title,company').in('id',jids);if(jr.data)jr.data.forEach(function(j){jm[j.id]=j;});}
     tb.innerHTML=r.data.map(function(a){
       var j=jm[a.job_id]||{};
-      return '<tr><td><strong>'+esc(a.name||'—')+'</strong><br><small style="color:#64748b">'+esc(a.email||'')+'</small></td><td>'+esc(j.title||'—')+'</td><td>'+esc(j.company_name||'—')+'</td><td>'+dstr(a.created_at)+'</td><td><span class="pill new">View in dashboard</span></td></tr>';
+      return '<tr><td><strong>'+esc(a.name||'—')+'</strong><br><small style="color:#64748b">'+esc(a.email||'')+'</small></td><td>'+esc(j.title||'—')+'</td><td>'+esc(j.company||'—')+'</td><td>'+dstr(a.created_at)+'</td><td><span class="pill new">View in dashboard</span></td></tr>';
     }).join('');
   }catch(e){tb.innerHTML='<tr><td colspan="5" style="color:#ef4444">Error</td></tr>';}
 }
@@ -397,8 +397,8 @@ async function loadRecent(){
   var box=document.getElementById('recentAct');
   try{
     var items=[];
-    var j=await sb.from('jobs').select('title,company_name,created_at').order('created_at',{ascending:false}).limit(5);
-    if(j.data)j.data.forEach(function(x){items.push({t:'💼 New job: <strong>'+esc(x.title)+'</strong> at '+esc(x.company_name),d:x.created_at});});
+    var j=await sb.from('jobs').select('title,company,created_at').order('created_at',{ascending:false}).limit(5);
+    if(j.data)j.data.forEach(function(x){items.push({t:'💼 New job: <strong>'+esc(x.title)+'</strong> at '+esc(x.company),d:x.created_at});});
     var l=await sb.from('leads').select('name,interest,created_at').order('created_at',{ascending:false}).limit(5);
     if(l.data)l.data.forEach(function(x){items.push({t:'📩 New lead: <strong>'+esc(x.name)+'</strong> — '+esc(x.interest),d:x.created_at});});
     items.sort(function(a,b){return new Date(b.d)-new Date(a.d);});
