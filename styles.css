@@ -405,3 +405,40 @@ input[type="text"],input[type="email"],input[type="password"],input[type="tel"]{
   background-color:#ffffff !important;
   color:#0d3f4f !important;
 }
+
+/* === MOBILE fixes (2026-10-14) === */
+@media(max-width:900px){
+  /* Hamburger menu - clearly visible */
+  .menu{
+    display:block !important;
+    color:#ffffff !important;
+    font-size:28px !important;
+    padding:10px !important;
+    background:rgba(255,255,255,.1) !important;
+    border-radius:8px !important;
+    line-height:1 !important;
+  }
+  /* Mobile footer - force dark professional */
+  footer{
+    background:linear-gradient(180deg,#0a2530,#061820) !important;
+  }
+  .footer-grid{
+    grid-template-columns:1fr !important;
+    gap:28px !important;
+  }
+  /* Mobile hero text readability */
+  .hero p{color:#0d3f4f !important;font-size:16px !important}
+  .hero-note span{font-size:12.5px !important;padding:7px 13px !important}
+  /* Mobile form inputs - force white */
+  .auth-form input,.brochure-form input,.form input{
+    background:#ffffff !important;color:#0d3f4f !important;
+    font-size:16px !important; /* prevents iOS zoom */
+  }
+}
+@media(max-width:620px){
+  .hero-stats{gap:20px !important;flex-wrap:wrap}
+  .hero-stat strong{font-size:22px !important}
+  .footer-social{justify-content:flex-start}
+  .newsletter-form{flex-direction:column}
+  .newsletter-form button{width:100%}
+}
