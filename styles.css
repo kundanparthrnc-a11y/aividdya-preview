@@ -171,3 +171,9 @@
 .partner-logo span{
   color:#33475f;white-space:nowrap;
 }
+
+/* === Hero readability fix (2026-10-14) === */
+.hero p{color:#0d3f4f !important;font-weight:500}
+.hero-note{color:#0d3f4f !important}
+.hero-note span{color:#134a5e;font-weight:600}
+.hero-note span:before{color:#0a7d9c}
