@@ -536,3 +536,41 @@ input[type="text"],input[type="email"],input[type="password"],input[type="tel"]{
 .hero-note{
   color:#0d3f4f !important;
 }
+
+/* === FAQ Professional Redesign (2026-10-15) === */
+.faq-list{max-width:800px}
+.faq-item{
+  background:#ffffff !important;
+  border:1px solid rgba(8,145,178,.12) !important;
+  border-radius:16px !important;
+  margin-bottom:14px !important;
+  box-shadow:0 4px 16px rgba(7,48,62,.05) !important;
+  overflow:hidden;transition:all .3s ease;
+}
+.faq-item:hover{box-shadow:0 8px 28px rgba(7,48,62,.1) !important;border-color:rgba(8,145,178,.25) !important}
+.faq-item.open{border-color:rgba(8,145,178,.35) !important;box-shadow:0 12px 32px rgba(8,145,178,.12) !important}
+.faq-q{
+  padding:20px 24px !important;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  background:none !important;
+}
+.faq-q span:first-child{
+  color:#07303e !important;font-weight:700 !important;font-size:16px !important;
+}
+.faq-q span:last-child{
+  flex-shrink:0;width:32px;height:32px;border-radius:50%;
+  background:rgba(8,145,178,.1);color:#0891b2 !important;
+  display:grid;place-items:center;font-size:18px;font-weight:700;
+  transition:all .3s;
+}
+.faq-item.open .faq-q span:last-child{
+  background:#0891b2;color:#fff !important;transform:rotate(45deg);
+}
+.faq-a{
+  padding:0 24px !important;color:#3d5a6c !important;
+  font-size:15px !important;line-height:1.7 !important;
+}
+.faq-item.open .faq-a{padding:0 24px 24px !important}
+.faq-a p{color:#3d5a6c !important;margin:0}
+/* FAQ page section bg */
+.faq{background:linear-gradient(180deg,#f0fdff,#e0f7fd) !important}
