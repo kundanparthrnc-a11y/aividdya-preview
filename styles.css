@@ -499,3 +499,40 @@ input[type="text"],input[type="email"],input[type="password"],input[type="tel"]{
   .dash-header{padding:24px}
   .dash-company h1{font-size:22px !important}
 }
+
+/* === Header & topbar text fix (2026-10-15) === */
+/* Top utility bar - dark text on light cyan */
+.utility-bar,.topbar-strip,.utility{
+  color:#0d3f4f !important;
+}
+.utility-bar a,.utility-bar span,
+.topbar-strip a,.topbar-strip span,
+.utility a,.utility span{
+  color:#0d3f4f !important;
+}
+/* Header brand - white text on dark */
+.brand,.brand span:last-child{
+  color:#ffffff !important;
+}
+.brand-mark{
+  background:linear-gradient(135deg,#0891b2,#22d3ee) !important;
+  color:#fff !important;
+}
+/* Nav links - light on dark header */
+.navlinks a,.nav-links a,nav a{
+  color:#cbd5e1 !important;
+}
+.navlinks a:hover,.nav-links a:hover,nav a:hover{
+  color:#ffffff !important;
+}
+.navlinks a.active,.nav-links a.active{
+  color:#22d3ee !important;
+}
+/* Hero subtitle - force dark readable */
+.hero>p,.hero .sub,.hero-sub{
+  color:#0d3f4f !important;
+}
+/* Hero checklist already has pill style, ensure text dark */
+.hero-note{
+  color:#0d3f4f !important;
+}
