@@ -383,3 +383,25 @@ footer{
   border-left:4px solid #0891b2;border-radius:0 12px 12px 0;
   padding:20px 24px;margin:28px 0;
 }
+
+/* === UNIVERSAL autofill fix - all forms all pages (2026-10-14) === */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+select:-webkit-autofill{
+  -webkit-text-fill-color:#0d3f4f !important;
+  -webkit-box-shadow:0 0 0 1000px #ffffff inset !important;
+  box-shadow:0 0 0 1000px #ffffff inset !important;
+  background-color:#ffffff !important;
+  color:#0d3f4f !important;
+  caret-color:#0d3f4f !important;
+  transition:background-color 5000s ease-in-out 0s !important;
+}
+/* Ensure all form inputs have white bg by default */
+.auth-form input,.brochure-form input,.newsletter-form input,
+input[type="text"],input[type="email"],input[type="password"],input[type="tel"]{
+  background-color:#ffffff !important;
+  color:#0d3f4f !important;
+}
