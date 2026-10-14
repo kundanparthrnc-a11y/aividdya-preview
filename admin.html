@@ -334,15 +334,15 @@ function exportLeads(){
 async function loadEmployers(){
   var tb=document.getElementById('empTbl');
   try{
-    var r=await sb.from('employer_profiles').select('user_id,company_name,contact_name,created_at').order('created_at',{ascending:false}).limit(100);
+    var r=await sb.from('employer_profiles').select('id,company_name,contact_person,created_at').order('created_at',{ascending:false}).limit(100);
     if(r.error)throw r.error;
     var jc={};
     var jr=await sb.from('jobs').select('employer_id').eq('status','approved');
     if(jr.data)jr.data.forEach(function(j){jc[j.employer_id]=(jc[j.employer_id]||0)+1;});
     var q=(document.getElementById('empSearch').value||'').toLowerCase();
-    var rows=r.data.filter(function(e){return !q||(e.company_name+' '+e.contact_name).toLowerCase().includes(q);});
+    var rows=r.data.filter(function(e){return !q||(e.company_name+' '+e.contact_person).toLowerCase().includes(q);});
     tb.innerHTML=rows.length?rows.map(function(e){
-      return '<tr><td><strong>'+esc(e.company_name||'—')+'</strong></td><td>'+esc(e.contact_name||'—')+'</td><td>'+esc(e.user_id||'').substring(0,8)+'…</td><td>'+(jc[e.user_id]||0)+' jobs</td><td>'+dstr(e.created_at)+'</td></tr>';
+      return '<tr><td><strong>'+esc(e.company_name||'—')+'</strong></td><td>'+esc(e.contact_person||'—')+'</td><td><small style="color:#64748b">'+esc(e.id||'').substring(0,8)+'…</small></td><td>'+(jc[e.id]||0)+' jobs</td><td>'+dstr(e.created_at)+'</td></tr>';
     }).join(''):'<tr><td colspan="5"><div class="empty">No employers yet.</div></td></tr>';
   }catch(e){tb.innerHTML='<tr><td colspan="5" style="color:#ef4444">Error: '+esc(e.message)+'</td></tr>';}
 }
@@ -352,7 +352,7 @@ document.getElementById('empSearch').addEventListener('input',loadEmployers);
 async function loadApps(){
   var tb=document.getElementById('appsTbl');
   try{
-    var r=await sb.from('applications').select('id,applicant_name,applicant_email,created_at,job_id').order('created_at',{ascending:false}).limit(100);
+    var r=await sb.from('applications').select('id,name,email,created_at,job_id').order('created_at',{ascending:false}).limit(100);
     if(r.error)throw r.error;
     if(!r.data.length){tb.innerHTML='<tr><td colspan="5"><div class="empty">No applications yet.</div></td></tr>';return;}
     var jids=[...new Set(r.data.map(function(a){return a.job_id;}))];
@@ -360,7 +360,7 @@ async function loadApps(){
     if(jids.length){var jr=await sb.from('jobs').select('id,title,company_name').in('id',jids);if(jr.data)jr.data.forEach(function(j){jm[j.id]=j;});}
     tb.innerHTML=r.data.map(function(a){
       var j=jm[a.job_id]||{};
-      return '<tr><td><strong>'+esc(a.applicant_name||'—')+'</strong><br><small style="color:#64748b">'+esc(a.applicant_email||'')+'</small></td><td>'+esc(j.title||'—')+'</td><td>'+esc(j.company_name||'—')+'</td><td>'+dstr(a.created_at)+'</td><td><span class="pill new">View in dashboard</span></td></tr>';
+      return '<tr><td><strong>'+esc(a.name||'—')+'</strong><br><small style="color:#64748b">'+esc(a.email||'')+'</small></td><td>'+esc(j.title||'—')+'</td><td>'+esc(j.company_name||'—')+'</td><td>'+dstr(a.created_at)+'</td><td><span class="pill new">View in dashboard</span></td></tr>';
     }).join('');
   }catch(e){tb.innerHTML='<tr><td colspan="5" style="color:#ef4444">Error</td></tr>';}
 }
