@@ -49,18 +49,30 @@ select#appJobSel{width:100%;border:1px solid rgba(34,211,238,.25);border-radius:
 <header><nav class="wrap"><a class="brand" href="index.html" aria-label="AI Viddya home"><span class="brand-mark">AI</span><span>AI Viddya</span></a><div class="navlinks" id="navlinks"><a href="index.html">Home</a><a href="jobs.html" class="active">Jobs</a><a href="contact.html">Contact</a></div><button class="menu" id="menu" aria-label="Open navigation" aria-expanded="false">☰</button></nav></header>
 
 <div class="dash-wrap" id="dashWrap" style="display:none">
-  <div class="dash-head">
-    <div><div class="kicker">Employer dashboard</div><h1 id="coName" style="margin:6px 0 0">—</h1></div>
+  <div class="dash-header">
+    <div class="dash-company">
+      <div class="dash-avatar" id="coAvatar">A</div>
+      <div>
+        <div class="kicker">Employer dashboard</div>
+        <h1 id="coName">—</h1>
+        <p>Manage your job postings and applications</p>
+      </div>
+    </div>
     <button class="btn-sm" id="logoutBtn" type="button">Logout</button>
+  </div>
+  <div class="dash-stats">
+    <div class="dash-stat"><div class="num" id="statJobs">0</div><div class="lbl">Active Jobs</div></div>
+    <div class="dash-stat"><div class="num" id="statApps">0</div><div class="lbl">Applications</div></div>
+    <div class="dash-stat"><div class="num" id="statViews">—</div><div class="lbl">Profile Views</div></div>
   </div>
   <div class="dash-err" id="dashErr"></div>
   <div class="dash-ok" id="dashOk"></div>
 
   <div class="dash-tabs">
-    <button class="active" data-tab="jobs" type="button">My Jobs</button>
-    <button data-tab="post" type="button">+ Post New Job</button>
-    <button data-tab="apps" type="button">Applications</button>
-    <button data-tab="profile" type="button">Profile</button>
+    <button class="dash-tab active" data-tab="jobs" type="button">My Jobs</button>
+    <button class="dash-tab" data-tab="post" type="button">+ Post New Job</button>
+    <button class="dash-tab" data-tab="apps" type="button">Applications</button>
+    <button class="dash-tab" data-tab="profile" type="button">Profile</button>
   </div>
 
   <div class="dash-panel active" id="panel-jobs"><div id="jobsList"><p class="empty">Loading…</p></div></div>
@@ -145,6 +157,8 @@ select#appJobSel{width:100%;border:1px solid rgba(34,211,238,.25);border-radius:
     if(!p.data){return sb.auth.signOut().then(function(){window.location.replace('employer.html');});}
     profile=p.data;
     document.getElementById('coName').textContent=profile.company_name;
+    var av=document.getElementById('coAvatar');
+    if(av&&profile.company_name)av.textContent=profile.company_name.charAt(0).toUpperCase();
     document.getElementById('loadingWrap').style.display='none';
     document.getElementById('dashWrap').style.display='block';
     fillProfile();loadJobs();
@@ -270,7 +284,9 @@ select#appJobSel{width:100%;border:1px solid rgba(34,211,238,.25);border-radius:
       website:document.getElementById('pWebsite').value.trim()||null};
     sb.from('employer_profiles').update(payload).eq('id',user.id).then(function(r){
       if(r.error) throw r.error;profile=Object.assign(profile,payload);
-      document.getElementById('coName').textContent=profile.company_name;ok('Profile saved.');
+      document.getElementById('coName').textContent=profile.company_name;
+    var av=document.getElementById('coAvatar');
+    if(av&&profile.company_name)av.textContent=profile.company_name.charAt(0).toUpperCase();ok('Profile saved.');
     }).catch(function(er){err('Save failed: '+(er.message||''));});
   });
 })();
