@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Jobs Admin — AI Viddya (team only)</title>
+<link rel="stylesheet" href="styles.css?v=20261014f" />
+<style>
+.admin-wrap{max-width:860px;margin:0 auto;padding:40px 20px 80px}
+.admin-wrap h1{margin-bottom:6px}
+.admin-wrap .sub{color:var(--muted);margin-bottom:28px}
+.step{background:rgba(255,255,255,.05);border:1px solid rgba(34,211,238,.2);border-radius:14px;padding:18px 20px;margin-bottom:14px}
+.step h3{margin:0 0 8px;font-size:16px}
+.step p,.step li{font-size:14px;color:var(--muted)}
+.step ol{margin:6px 0 0;padding-left:20px}
+.gen-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.gen-grid{grid-template-columns:1fr}}
+#jsonOut{background:#0b2b36;color:#a5f3fc;border-radius:12px;padding:16px;font-family:monospace;font-size:12.5px;white-space:pre-wrap;word-break:break-word;max-height:320px;overflow:auto;margin-top:14px}
+.copy-btn{margin-top:10px}
+.live-list{font-size:14px}
+.live-list li{margin-bottom:6px}
+.warn{background:rgba(255,180,80,.08);border:1px solid rgba(255,180,80,.35);border-radius:12px;padding:14px 18px;font-size:14px;margin-bottom:18px}
+</style>
+</head>
+<body>
+<div class="admin-wrap">
+<h1>Jobs Admin <span style="font-size:14px;color:var(--muted)">(team only — not linked anywhere)</span></h1>
+<p class="sub">Employer job postings ko review karke live karne ka dashboard.</p>
+
+<div class="warn"><strong>Workflow:</strong> Employer "Post a Job" form bharta hai → tumhe email aata hai (subject: <em>New Employer Job Posting</em>) → verify karo → neeche generator se JSON banao → <strong>hPanel → File Manager → public_html/employer-jobs.json</strong> me jobs array me paste karo → turant live.</div>
+
+<div class="step"><h3>Step 1 — Live employer jobs (abhi site pe kya dikh raha hai)</h3><ul class="live-list" id="liveList"><li>Loading…</li></ul></div>
+
+<div class="step"><h3>Step 2 — Approved posting ka JSON banao</h3>
+<div class="gen-grid">
+<div class="field"><label>Job title *</label><input id="gTitle"></div>
+<div class="field"><label>Company *</label><input id="gCompany"></div>
+<div class="field"><label>Location *</label><input id="gLocation"></div>
+<div class="field"><label>Job type</label><select id="gType"><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Internship</option></select></div>
+<div class="field"><label>Experience</label><input id="gExp" placeholder="e.g. 2-4 years"></div>
+<div class="field"><label>Salary range</label><input id="gSalary" placeholder="e.g. 8-12 LPA"></div>
+<div class="field" style="grid-column:1/-1"><label>Description *</label><textarea id="gDesc" rows="3"></textarea></div>
+<div class="field"><label>Category (filter chip)</label><select id="gCat"><option value="data analyst">Data Analyst</option><option value="data engineer">Data Engg</option><option value="machine learning engineer">AI/ML</option><option value="data scientist">Data Science</option><option value="python developer">Python</option><option value="generative ai engineer">Gen AI</option><option value="mlops engineer">MLOps</option></select></div>
+<div class="field"><label>Contact email (applications go here)</label><input id="gApply" placeholder="hr@company.com"></div>
+</div>
+<button class="btn primary" id="genBtn" type="button">Generate JSON →</button>
+<pre id="jsonOut" style="display:none"></pre>
+<button class="btn secondary copy-btn" id="copyBtn" type="button" style="display:none">Copy JSON</button>
+</div>
+
+<div class="step"><h3>Step 3 — employer-jobs.json me paste karo</h3>
+<ol>
+<li>hPanel → File Manager → <code>public_html/employer-jobs.json</code> kholo (Edit).</li>
+<li><code>"jobs": [</code> ke andar, sabse upar ye JSON object paste karo (pehle se jobs hain to comma lagana mat bhoolna).</li>
+<li>Save → <code>aividdya.com/jobs</code> kholo — nayi posting "Direct employer" badge ke saath sabse upar dikhegi.</li>
+<li>Posting hatani ho to uska object delete karke save kar do.</li>
+</ol></div>
+</div>
+<script>
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+fetch('employer-jobs.json').then(function(r){return r.json()}).then(function(d){
+var jobs=(d&&d.jobs)||[],ul=document.getElementById('liveList');
+ul.innerHTML=jobs.length?jobs.map(function(j){return '<li><strong>'+esc(j.title)+'</strong> — '+esc(j.company)+' ('+esc(j.location||'')+')</li>'}).join(''):'<li>No employer-posted jobs live right now.</li>';
+}).catch(function(){document.getElementById('liveList').innerHTML='<li>Could not load employer-jobs.json</li>'});
+document.getElementById('genBtn').addEventListener('click',function(){
+function v(id){return document.getElementById(id).value.trim()}
+var title=v('gTitle'),company=v('gCompany'),desc=v('gDesc');
+if(!title||!company||!desc){alert('Job title, Company aur Description required hain.');return}
+var obj={
+id:'emp_'+Date.now().toString(36),
+title:title,company:company,location:v('gLocation'),type:v('gType'),
+posted:new Date().toISOString().slice(0,10),
+description:desc+(v('gSalary')?' Salary: '+v('gSalary')+'.':'')+(v('gExp')?' Experience: '+v('gExp')+'.':''),
+apply_url:v('gApply'),source:'Direct employer',category:v('gCat'),employer_posted:true
+};
+var out=document.getElementById('jsonOut');
+out.textContent=JSON.stringify(obj,null,2)+',';
+out.style.display='block';
+var cb=document.getElementById('copyBtn');cb.style.display='inline-block';
+});
+document.getElementById('copyBtn').addEventListener('click',function(){
+var t=document.getElementById('jsonOut').textContent;
+(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){alert('Copied!')},function(){
+var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();
+try{document.execCommand('copy');alert('Copied!')}catch(e){alert('Copy failed — select manually.')}});
+});
+</script>
+</body>
+</html>

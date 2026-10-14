@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:," />
+  <title>Jobs — AI Viddya</title>
+  <meta name="description" content="Hands-on Python, AI/ML, Agentic AI/LLMOps, Generative AI and industrial training in Whitefield, Bengaluru." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+
+
+
+<link rel="stylesheet" href="styles.css?v=20261014f">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+</head>
+<body>
+<div class="utility"><div class="wrap"><span><span class="status-dot"></span>Admissions & business enquiries open</span><div class="utility-links"><span>Mon–Fri · 9:00 AM–5:00 PM</span><a href="tel:+918088569153">+91 80885 69153</a><a href="mailto:info@aividdya.com">info@aividdya.com</a></div></div></div>
+  <header><nav class="wrap"><a class="brand" href="index.html" aria-label="AI Viddya home"><span class="brand-mark">AI</span><span>AI Viddya</span></a><div class="navlinks" id="navlinks"><a href="index.html">Home</a><a href="why-us.html">Why us</a><a href="programs.html">Programs</a><a href="solutions.html">Solutions</a><a href="jobs.html" class="active">Jobs</a><a href="about.html">About</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a></div><a class="nav-cta" href="contact.html">Talk to us →</a><button class="menu" id="menu" aria-label="Open navigation" aria-expanded="false">☰</button></nav></header><div class="page-head"><div class="wrap"><h1>Jobs</h1><p>Fresh AI/Data roles across India — updated automatically every day.</p></div></div>
+<div class="wrap"><div class="employer-strip reveal"><div><h2>Hiring for AI / Data roles?</h2><p>Post your opening for free — it goes live after a quick review by our team.</p></div><a class="btn primary" href="employer.html">Post a Job &rarr;</a></div></div>
+<section class="jobs-sec"><div class="wrap">
+<div class="jobs-toolbar" id="jobsFilters">
+<button class="chip active" data-f="all">All Jobs</button>
+<button class="chip" data-f="machine learning engineer">AI/ML</button>
+<button class="chip" data-f="data scientist">Data Science</button>
+<button class="chip" data-f="python developer">Python</button>
+<button class="chip" data-f="generative ai engineer">Gen AI</button>
+<button class="chip" data-f="data analyst">Data Analyst</button>
+<button class="chip" data-f="mlops engineer">MLOps</button>
+<button class="chip" data-f="data engineer">Data Engg</button>
+</div>
+<div class="jobs-status" id="jobsStatus">Loading fresh jobs&hellip;</div>
+<div class="jobs-grid" id="jobsGrid"></div>
+<div class="wrap" style="margin-top:44px"><div class="cta-band"><div><h2>Can't find the right role?</h2>
+<p>Talk to our placement team — we work with hiring partners across India.</p></div>
+<a class="btn primary" href="contact.html" style="background:#fff;color:#0891b2">Contact Placement Team &rarr;</a>
+</div></div>
+</div></section>
+<div class="modal" id="applyModal"><div class="modal-box">
+<button class="modal-x" id="modalX" aria-label="Close">&times;</button>
+<h3>Apply for this role</h3><p class="modal-job" id="modalJob"></p>
+<form id="applyForm">
+<input type="hidden" id="apJobTitle"><input type="hidden" id="apCompany">
+<div class="field"><label>Your name *</label><input id="apName" required></div>
+<div class="field"><label>Email *</label><input id="apEmail" type="email" required></div>
+<div class="field"><label>Phone *</label><input id="apPhone" required inputmode="tel"></div>
+<div class="field"><label>Graduation year *</label><input id="apGrad" required inputmode="numeric"></div>
+<div class="field" id="cvLinkWrap"><label>CV / resume link (Google Drive) *</label><input id="apCv" required placeholder="Paste shareable Drive link"></div><div class="field" id="cvFileWrap" style="display:none"><label>Upload your CV *</label><input type="file" id="apCvFile" accept=".pdf,.doc,.docx"><small class="hint">PDF, DOC or DOCX, max 5 MB. It goes directly to the employer — no Drive link needed.</small></div>
+<div class="field"><label>Note for the employer (optional)</label><textarea id="apNote"></textarea></div>
+<button class="btn primary" type="submit" style="width:100%">Submit Application &rarr;</button>
+<p class="form-note" id="applyMsg" style="display:none"></p>
+</form>
+</div></div>
+<section class="partners" aria-label="Hiring partners"><div class="wrap"><div class="partners-head reveal"><div class="kicker">Placement partners</div><h2>Our hiring partners</h2><p>Companies where AI Viddya learners take their careers next.</p></div></div><div class="partners-marquee"><div class="partners-track"><div class="partner-logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg><span>Hiring Partner</span></div><div class="partner-logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg><span>Hiring Partner</span></div><div class="partner-logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg><span>Hiring Partner</span></div><div class="partner-logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg><span>Hiring Partner</span></div><div class="partner-logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg><span>Hiring Partner</span></div><div class="partner-logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg><span>Hiring Partner</span></div><div class="partner-logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg><span>Hiring Partner</span></div><div class="partner-logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg><span>Hiring Partner</span></div><div class="partner-logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg><span>Hiring Partner</span></div><div class="partner-logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg><span>Hiring Partner</span></div><div class="partner-logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg><span>Hiring Partner</span></div><div class="partner-logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg><span>Hiring Partner</span></div>
+<!-- PARTNER LOGOS: replace each placeholder tile below with <img src="assets/partners/company-logo.png" alt="Company Name">. Client to provide real logos. Tiles are duplicated for a seamless loop. -->
+
+
+</div></div></section>
+<footer><div class="wrap"><div class="footer-grid"><div><div class="footer-brand">AI Viddya</div><p style="max-width:340px">Practical Data Science, AI/ML and Generative AI learning in Whitefield, Bengaluru.</p></div><div class="footer-col"><h3>Programs</h3><a href="programs.html">Python</a><a href="programs.html">AI & ML</a><a href="programs.html">Agentic AI/LLMOps</a><a href="programs.html">Gen AI</a></div><div class="footer-col"><h3>Solutions</h3><a href="solutions.html">AI Solutions</a><a href="solutions.html">Cloud Solutions</a><a href="contact.html">Business enquiry</a></div><div class="footer-col"><h3>Contact</h3><a href="tel:+918088569153">+91 80885 69153</a><a href="mailto:info@aividdya.com">info@aividdya.com</a><span style="font-size:14px">Whitefield, Bengaluru</span></div></div><div class="copyright"><span>© 2026 AI Viddya. All Rights Reserved.</span><span>Practical learning. Industry perspective.</span></div></div></footer>
+<script>
+    (function(){
+      document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){var id=a.getAttribute('href').slice(1),el=id?document.getElementById(id):null;if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});history.replaceState(null,'',location.pathname+location.search)}})});
+      /* Learning Engine wires: self-healing aligned connectors */
+      (function(){
+        var stage=document.getElementById('leStage'),svg=document.getElementById('leWires');
+        if(!stage||!svg)return;
+        var NS='http://www.w3.org/2000/svg',lastKey='__init__';
+        function posKey(){
+          var k='';
+          var cards=document.querySelectorAll('#leStage .le-card');
+          for(var i=0;i<cards.length;i++){var r=cards[i].getBoundingClientRect();k+=Math.round(r.left)+':'+Math.round(r.top)+':'+Math.round(r.width)+':'+Math.round(r.height)+';';}
+          return k;
+        }
+        function draw(){
+          if(window.innerWidth<=900){svg.innerHTML='';return}
+          var sr=stage.getBoundingClientRect();
+          svg.setAttribute('viewBox','0 0 '+sr.width+' '+sr.height);
+          while(svg.firstChild)svg.removeChild(svg.firstChild);
+          var hex=document.querySelector('.le-hex-outer');
+          if(!hex)return;
+          var hr=hex.getBoundingClientRect();
+          var hx=hr.left+hr.width/2-sr.left, hy=hr.top+hr.height/2-sr.top;
+          var cards=document.querySelectorAll('#leStage .le-card');
+          for(var idx=0;idx<cards.length;idx++){
+            (function(card,idx){
+              var warm=card.classList.contains('warm');
+              var col=warm?'#0891b2':'#67e8f9';
+              var r=card.getBoundingClientRect();
+              var right=card.getAttribute('data-port')==='right';
+              /* dot center: dot is 10px at top:50% with -5px offsets => x=border edge -/+1 */
+              var x1=right?(r.right-sr.left-1):(r.left-sr.left+1);
+              var y1=r.top+r.height/2-sr.top;
+              var dx=Math.abs(hx-x1)*0.55;
+              var f=function(n){return n.toFixed(1)};
+              var d='M'+f(x1)+' '+f(y1)+' C'+f(x1+(right?dx:-dx))+' '+f(y1)+', '+f(hx+(right?-dx:dx))+' '+f(hy)+', '+f(hx)+' '+f(hy);
+              var pid='lePath'+idx;
+              var glow=document.createElementNS(NS,'path');
+              glow.setAttribute('d',d);glow.setAttribute('class','le-wire-glow');glow.setAttribute('stroke',col);
+              var wire=document.createElementNS(NS,'path');
+              wire.setAttribute('d',d);wire.setAttribute('class','le-wire');wire.setAttribute('stroke',col);wire.setAttribute('id',pid);
+              svg.appendChild(glow);svg.appendChild(wire);
+              var dot=document.createElementNS(NS,'circle');
+              dot.setAttribute('r','5');dot.setAttribute('fill',col);
+              dot.style.filter='drop-shadow(0 0 6px '+col+')';
+              var am=document.createElementNS(NS,'animateMotion');
+              am.setAttribute('dur',(2.4+idx*0.35)+'s');am.setAttribute('repeatCount','indefinite');
+              am.setAttribute('begin',(idx*0.4)+'s');
+              var mp=document.createElementNS(NS,'mpath');
+              mp.setAttribute('href','#'+pid);
+              am.appendChild(mp);dot.appendChild(am);svg.appendChild(dot);
+            })(cards[idx],idx);
+          }
+        }
+        function check(){
+          if(window.innerWidth<=900){if(svg.firstChild)svg.innerHTML='';lastKey='__init__';return}
+          var k=posKey();
+          if(k!==lastKey){lastKey=k;draw();}
+        }
+        draw();lastKey=posKey();
+        var iv=setInterval(check,700);
+        window.addEventListener('resize',function(){lastKey='__init__';check();});
+        window.addEventListener('load',function(){setTimeout(check,500);setTimeout(check,1500);});
+        if(document.hidden!==undefined){document.addEventListener('visibilitychange',function(){if(!document.hidden)check();});}
+      })();
+
+      var menu=document.getElementById('menu'), nav=document.getElementById('navlinks');
+      menu.addEventListener('click',function(){var open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));menu.textContent=open?'×':'☰'});
+      nav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){nav.classList.remove('open');menu.setAttribute('aria-expanded','false');menu.textContent='☰'})});
+      document.querySelectorAll('.faq-q').forEach(function(btn){btn.addEventListener('click',function(){btn.parentElement.classList.toggle('open')})});
+      if(document.getElementById('quoteText')){(function(){var quotes=[
+        ['The hands-on experience helped bridge the gap between theory and practical application.','Learner feedback shared by AI Viddya'],
+        ['The learning experience helped build skills for the rapidly evolving field of artificial intelligence and machine learning.','Learner feedback shared by AI Viddya']
+      ], qi=0;
+      function renderQuote(){var __qt=document.getElementById('quoteText');if(!__qt)return;__qt.textContent=quotes[qi][0];document.getElementById('quoteCite').textContent=quotes[qi][1]}
+      document.getElementById('prevQuote').addEventListener('click',function(){qi=(qi+quotes.length-1)%quotes.length;renderQuote()});
+      document.getElementById('nextQuote').addEventListener('click',function(){qi=(qi+1)%quotes.length;renderQuote()});})();}
+      (function(){var __ef=document.getElementById('enquiryForm');if(__ef)__ef.addEventListener('submit',function(e){e.preventDefault();var f=e.currentTarget,btn=f.querySelector('button[type="submit"]'),ok=document.getElementById('formSuccess');var n=f.name.value.trim(),p=f.phone.value.trim(),i=f.interest.value,m=f.message.value.trim();btn.disabled=true;var orig=btn.textContent;btn.textContent='Sending...';fetch('https://formsubmit.co/ajax/kaushal.tekconz@gmail.com',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({name:n,phone:p,interest:i,message:m,_subject:'New Website Enquiry: '+i,_template:'table',_captcha:'false',_honey:''})}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(){ok.style.display='block';ok.textContent='Thank you, '+n.split(' ')[0]+'! Your enquiry has been sent. We will contact you within 24 hours.';f.reset();btn.disabled=false;btn.textContent=orig;}).catch(function(){btn.disabled=false;btn.textContent=orig;window.location.href='mailto:kaushal.tekconz@gmail.com?subject='+encodeURIComponent('Enquiry: '+i)+'\u0026body='+encodeURIComponent('Name: '+n+'\nPhone: '+p+'\nInterest: '+i+'\n\n'+m)});});})();
+      var progress=document.getElementById('scrollProgress'),ticking=false;if(!progress){progress={style:{}};}
+      function updateProgress(){var max=document.documentElement.scrollHeight-window.innerHeight;var ratio=max>0?window.scrollY/max:0;progress.style.transform='scaleX('+Math.min(1,Math.max(0,ratio))+')';ticking=false}
+      window.addEventListener('scroll',function(){if(!ticking){requestAnimationFrame(updateProgress);ticking=true}},{passive:true});updateProgress();
+      var stage=document.getElementById('pipelineStage');
+      if(stage&&window.matchMedia('(prefers-reduced-motion: no-preference)').matches){stage.addEventListener('pointermove',function(e){var r=stage.getBoundingClientRect();stage.style.setProperty('--mx',((e.clientX-r.left)/r.width-.5)*18);stage.style.setProperty('--my',((e.clientY-r.top)/r.height-.5)*18)});stage.addEventListener('pointerleave',function(){stage.style.setProperty('--mx',0);stage.style.setProperty('--my',0)})}
+      if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}})},{threshold:.08});document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)})}else{document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('visible')})}
+    })();
+  
+(function(){
+var grid=document.getElementById('jobsGrid'),status=document.getElementById('jobsStatus');
+if(!grid)return;
+var allJobs=[],cur='all';
+var CATL={'machine learning engineer':'AI/ML','data scientist':'Data Science','python developer':'Python',
+'generative ai engineer':'Gen AI','data analyst':'Data Analyst','mlops engineer':'MLOps','data engineer':'Data Engg'};
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function render(){
+var list=allJobs.filter(function(j){return cur==='all'||j.category===cur});
+if(!list.length){grid.innerHTML='';status.style.display='block';
+status.textContent=allJobs.length?'No jobs in this category right now — check another.':'New jobs are being added. Check back soon!';return;}
+status.style.display='none';
+grid.innerHTML=list.map(function(j){
+return '<article class="job-card"><div class="job-top"><span class="job-cat">'+esc(CATL[j.category]||'Job')+'</span><span class="job-src">'+esc(j.source||'')+'</span></div>'
++'<h3>'+esc(j.title)+'</h3>'
++'<div class="job-meta">'+esc(j.company||'')+(j.company&&j.location?' · ':'')+esc(j.location||'')+(j.type?' · '+esc(j.type):'')+'</div>'
++'<p class="job-desc">'+esc((j.description||'').slice(0,160))+'...</p>'
++'<div class="job-foot"><span class="job-date">'+(j.posted?'Posted '+esc(j.posted):'')+'</span>'
++'<button class="apply-btn" data-id="'+esc(j.id)+'">Apply Now</button></div></article>';}).join('');
+grid.querySelectorAll('.apply-btn').forEach(function(b){b.addEventListener('click',function(){openApply(b.getAttribute('data-id'))})});
+}
+document.getElementById('jobsFilters').addEventListener('click',function(e){
+var c=e.target.closest('.chip');if(!c)return;
+document.querySelectorAll('#jobsFilters .chip').forEach(function(x){x.classList.remove('active')});
+c.classList.add('active');cur=c.getAttribute('data-f');render();});
+function openApply(id){
+var j=null;for(var i=0;i<allJobs.length;i++)if(allJobs[i].id===id)j=allJobs[i];if(!j)return;
+document.getElementById('modalJob').textContent=j.title+(j.company?' — '+j.company:'');
+document.getElementById('apJobTitle').value=j.title;document.getElementById('apCompany').value=j.company||'';
+document.getElementById('applyMsg').style.display='none';
+document.getElementById('applyModal').classList.add('open');}
+document.getElementById('modalX').addEventListener('click',function(){document.getElementById('applyModal').classList.remove('open')});
+document.getElementById('applyModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')});
+var _portalJobId=null;
+var _openApply=openApply;
+openApply=function(id){
+var j=null;for(var i=0;i<allJobs.length;i++)if(allJobs[i].id===id)j=allJobs[i];
+_portalJobId=(j&&j.portal_id)||null;document.getElementById('cvLinkWrap').style.display=_portalJobId?'none':'';document.getElementById('cvFileWrap').style.display=_portalJobId?'':'none';_openApply(id);};
+document.getElementById('applyForm').addEventListener('submit',function(e){e.preventDefault();
+var btn=this.querySelector('button[type="submit"]'),msg=document.getElementById('applyMsg');
+var d={job:document.getElementById('apJobTitle').value,company:document.getElementById('apCompany').value,
+name:document.getElementById('apName').value.trim(),email:document.getElementById('apEmail').value.trim(),
+phone:document.getElementById('apPhone').value.trim(),grad:document.getElementById('apGrad').value.trim(),
+cv:document.getElementById('apCv').value.trim(),note:document.getElementById('apNote').value.trim()};
+btn.disabled=true;var orig=btn.textContent;btn.textContent='Submitting...';
+function doneOk(t){msg.style.display='block';msg.style.color='#1d9b69';msg.textContent=t;
+btn.disabled=false;btn.textContent=orig;document.getElementById('applyForm').reset();}
+function doneErr(){btn.disabled=false;btn.textContent=orig;msg.style.display='block';msg.style.color='#c0392b';
+msg.textContent='Something went wrong. Please try again or WhatsApp us at 90390 04848.';}
+if(_portalJobId&&SUPA){
+function warn(t){msg.style.display='block';msg.style.color='#c0392b';msg.textContent=t;btn.disabled=false;btn.textContent=orig;}
+var file=document.getElementById('apCvFile').files[0];
+if(!file){warn('Please choose your CV file (PDF, DOC or DOCX).');return;}
+var ext=(file.name.split('.').pop()||'').toLowerCase();
+if(['pdf','doc','docx'].indexOf(ext)<0){warn('Only PDF, DOC or DOCX files are accepted.');return;}
+if(file.size>5*1024*1024){warn('CV must be under 5 MB.');return;}
+btn.textContent='Uploading CV...';
+var cvpath=_portalJobId+'/'+Date.now().toString(36)+Math.random().toString(36).slice(2,10)+'.'+ext;
+SUPA.storage.from('cvs').upload(cvpath,file)
+.then(function(up){if(up.error)throw up.error;
+return SUPA.from('applications').insert({job_id:_portalJobId,name:d.name,email:d.email,phone:d.phone||null,
+grad_year:d.grad||null,cv_link:null,cv_storage_path:cvpath,note:d.note||null});})
+.then(function(r){if(r.error)throw r.error;doneOk('Application submitted! The employer will contact you soon.');})
+.catch(function(){warn('CV upload failed. Please check your file and try again.');});return;}
+fetch('https://formsubmit.co/ajax/kaushal.tekconz@gmail.com',{method:'POST',
+headers:{'Content-Type':'application/json','Accept':'application/json'},
+body:JSON.stringify({job_title:d.job,company:d.company,name:d.name,email:d.email,phone:d.phone,
+graduation_year:d.grad,cv_link:d.cv,note:d.note,_subject:'Job Application: '+d.job+' — '+d.name,_template:'table',_captcha:'false',_honey:''})})
+.then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(){
+doneOk('Application submitted! Our placement team will contact you soon.');})
+.catch(doneErr);});
+var SUPA=null;
+try{if(window.AV_SUPABASE_URL&&window.AV_SUPABASE_URL.indexOf('PASTE_')!==0&&window.supabase){SUPA=window.supabase.createClient(window.AV_SUPABASE_URL,window.AV_SUPABASE_ANON_KEY);}}catch(e){SUPA=null;}
+function fetchPortalJobs(){
+if(!SUPA)return Promise.resolve([]);
+return SUPA.from('jobs').select('*').eq('status','approved').order('created_at',{ascending:false})
+.then(function(r){if(r.error)throw r.error;
+return (r.data||[]).map(mapPortalJob);
+}).catch(function(){return [];});
+}
+function mapPortalJob(j){return{id:'portal_'+j.id,portal_id:j.id,title:j.title,
+company:j.company,location:j.location||'',type:j.job_type||'',posted:(j.created_at||'').slice(0,10),
+description:j.description||'',source:'Direct employer',category:j.category||'data analyst',employer_posted:true};}
+/* Realtime: approved portal jobs appear/update/disappear without refresh */
+function subscribeJobsLive(){
+if(!SUPA||!SUPA.channel)return;
+try{
+SUPA.channel('public-jobs-live')
+.on('postgres_changes',{event:'*',schema:'public',table:'jobs'},function(p){
+var rec=p.new||{},oldR=p.old||{},pid=rec.id||oldR.id;if(!pid)return;
+var idx=-1;for(var i=0;i<allJobs.length;i++){if(allJobs[i].portal_id===pid){idx=i;break;}}
+if(p.eventType==='DELETE'||(rec.status&&rec.status!=='approved')){if(idx>=0){allJobs.splice(idx,1);render();}return;}
+if(rec.status==='approved'){var m=mapPortalJob(rec);if(idx>=0){allJobs[idx]=m;}else{allJobs.unshift(m);}render();}
+})
+.subscribe();
+}catch(e){/* realtime unavailable — page still works via initial load */}
+}
+Promise.all([
+fetch('https://cdn.jsdelivr.net/gh/kundanparthrnc-a11y/aividdya-jobs@main/jobs.json').then(function(r){if(!r.ok)throw 0;return r.json()}).catch(function(){return {jobs:[]}}),
+fetchPortalJobs()
+]).then(function(res){
+var auto=(res[0]&&res[0].jobs)||[], emp=res[1]||[];
+allJobs=emp.concat(auto);render();subscribeJobsLive();
+}).catch(function(){status.textContent='Jobs are updating right now — please check back in a bit, or contact our placement team.';});
+/* employer badge in cards */
+var _render=render;
+render=function(){
+var list=allJobs.filter(function(j){return cur==='all'||j.category===cur});
+if(!list.length){grid.innerHTML='';status.style.display='block';
+status.textContent=allJobs.length?'No jobs in this category right now — check another.':'New jobs are being added. Check back soon!';return;}
+status.style.display='none';
+grid.innerHTML=list.map(function(j){
+var badge=j.employer_posted?'<span class="job-src job-src-direct">Direct employer</span>':'<span class="job-src">'+esc(j.source||'')+'</span>';
+return '<article class="job-card"><div class="job-top"><span class="job-cat">'+esc(CATL[j.category]||'Job')+'</span>'+badge+'</div>'
++'<h3>'+esc(j.title)+'</h3>'
++'<div class="job-meta">'+esc(j.company||'')+(j.company&&j.location?' · ':'')+esc(j.location||'')+(j.type?' · '+esc(j.type):'')+'</div>'
++'<p class="job-desc">'+esc((j.description||'').slice(0,160))+'...</p>'
++'<div class="job-foot"><span class="job-date">'+(j.posted?'Posted '+esc(j.posted):'')+'</span>'
++'<button class="apply-btn" data-id="'+esc(j.id)+'">Apply Now</button></div></article>';}).join('');
+grid.querySelectorAll('.apply-btn').forEach(function(b){b.addEventListener('click',function(){openApply(b.getAttribute('data-id'))})});
+};
+
+})();
+</script>
+</body>
+</html>

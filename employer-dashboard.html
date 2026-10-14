@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Employer Dashboard — AI Viddya Jobs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=20261014f">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<style>
+.dash-wrap{max-width:960px;margin:0 auto;padding:36px 20px 90px}
+.dash-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.dash-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.dash-tabs button{padding:10px 18px;border-radius:999px;border:1px solid rgba(34,211,238,.25);background:transparent;color:var(--ink);font-weight:700;cursor:pointer;font-size:14px}
+.dash-tabs button.active{background:#22d3ee;color:#0b2b36;border-color:#22d3ee}
+.dash-panel{display:none}
+.dash-panel.active{display:block}
+.job-row{display:flex;align-items:center;justify-content:space-between;gap:14px;background:rgba(255,255,255,.045);border:1px solid rgba(34,211,238,.16);border-radius:14px;padding:16px 18px;margin-bottom:12px;flex-wrap:wrap}
+.job-row h4{margin:0 0 4px;font-size:16px}
+.job-row .meta{font-size:13px;color:var(--muted)}
+.st{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:4px 12px;margin-left:8px}
+.st-pending{background:rgba(255,180,80,.15);color:#ffcf7d;border:1px solid rgba(255,180,80,.4)}
+.st-approved{background:rgba(60,220,150,.13);color:#7fe6b0;border:1px solid rgba(60,220,150,.4)}
+.st-rejected{background:rgba(255,90,90,.12);color:#ff9d9d;border:1px solid rgba(255,90,90,.4)}
+.row-actions{display:flex;gap:8px}
+.btn-sm{padding:8px 14px;font-size:13px;border-radius:9px;border:1px solid rgba(34,211,238,.3);background:transparent;color:var(--ink);cursor:pointer;font-weight:700}
+.btn-sm.danger{border-color:rgba(255,90,90,.45);color:#ff9d9d}
+.btn-sm:hover{background:rgba(34,211,238,.12)}
+.empty{color:var(--muted);font-size:14.5px;background:rgba(255,255,255,.03);border:1px dashed rgba(34,211,238,.25);border-radius:14px;padding:26px;text-align:center}
+.app-card{background:rgba(255,255,255,.045);border:1px solid rgba(34,211,238,.16);border-radius:14px;padding:16px 18px;margin-bottom:12px}
+.app-card h4{margin:0 0 6px}
+.app-card .meta{font-size:13.5px;color:var(--muted);line-height:1.7}
+.app-card a{color:#22d3ee}
+.form-card{background:rgba(255,255,255,.045);border:1px solid rgba(34,211,238,.16);border-radius:16px;padding:24px}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media(max-width:640px){.form-2col{grid-template-columns:1fr}}
+.dash-err{display:none;background:rgba(255,90,90,.1);border:1px solid rgba(255,90,90,.4);color:#ff9d9d;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:14px}
+.dash-ok{display:none;background:rgba(60,220,150,.1);border:1px solid rgba(60,220,150,.4);color:#7fe6b0;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:14px}
+select#appJobSel{width:100%;border:1px solid rgba(34,211,238,.25);border-radius:10px;padding:11px 12px;font-size:14.5px;background:rgba(255,255,255,.05);color:var(--ink);margin-bottom:16px}
+.linkbtn{background:none;border:none;padding:0;color:#0891b2;font:inherit;font-weight:700;cursor:pointer;text-decoration:underline}.linkbtn:disabled{opacity:.6;cursor:default}
+</style>
+</head>
+<body>
+<div class="utility"><div class="wrap"><span><span class="status-dot"></span>Employer portal</span><div class="utility-links"><a href="jobs.html">← Jobs page</a></div></div></div>
+<header><nav class="wrap"><a class="brand" href="index.html" aria-label="AI Viddya home"><span class="brand-mark">AI</span><span>AI Viddya</span></a><div class="navlinks" id="navlinks"><a href="index.html">Home</a><a href="jobs.html" class="active">Jobs</a><a href="contact.html">Contact</a></div><button class="menu" id="menu" aria-label="Open navigation" aria-expanded="false">☰</button></nav></header>
+
+<div class="dash-wrap" id="dashWrap" style="display:none">
+  <div class="dash-head">
+    <div><div class="kicker">Employer dashboard</div><h1 id="coName" style="margin:6px 0 0">—</h1></div>
+    <button class="btn-sm" id="logoutBtn" type="button">Logout</button>
+  </div>
+  <div class="dash-err" id="dashErr"></div>
+  <div class="dash-ok" id="dashOk"></div>
+
+  <div class="dash-tabs">
+    <button class="active" data-tab="jobs" type="button">My Jobs</button>
+    <button data-tab="post" type="button">+ Post New Job</button>
+    <button data-tab="apps" type="button">Applications</button>
+    <button data-tab="profile" type="button">Profile</button>
+  </div>
+
+  <div class="dash-panel active" id="panel-jobs"><div id="jobsList"><p class="empty">Loading…</p></div></div>
+
+  <div class="dash-panel" id="panel-post">
+    <div class="form-card"><form id="jobForm">
+      <input type="hidden" id="jId">
+      <div class="form-2col">
+        <div class="field"><label>Job title *</label><input id="jTitle" required></div>
+        <div class="field"><label>Location</label><input id="jLocation" placeholder="e.g. Bengaluru / Remote"></div>
+        <div class="field"><label>Job type</label><select id="jType"><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Internship</option></select></div>
+        <div class="field"><label>Category</label><select id="jCat"><option value="data analyst">Data Analyst</option><option value="data engineer">Data Engineer</option><option value="machine learning engineer">AI/ML Engineer</option><option value="data scientist">Data Scientist</option><option value="python developer">Python Developer</option><option value="generative ai engineer">Gen AI Engineer</option><option value="mlops engineer">MLOps Engineer</option></select></div>
+        <div class="field"><label>Experience</label><input id="jExp" placeholder="e.g. 2-4 years"></div>
+        <div class="field"><label>Salary range</label><input id="jSalary" placeholder="e.g. 8-12 LPA"></div>
+      </div>
+      <div class="field"><label>Job description *</label><textarea id="jDesc" rows="5" required placeholder="Role, responsibilities, must-have skills..."></textarea></div>
+      <div class="field"><label>Application email (where applications go) *</label><input id="jApply" type="email" required placeholder="hr@company.com"></div>
+      <button class="btn primary" type="submit" id="jobSubmitBtn">Submit for Review →</button>
+      <button class="btn-sm" type="button" id="cancelEdit" style="display:none;margin-left:8px">Cancel edit</button>
+      <p style="font-size:13px;color:var(--muted);margin:10px 0 0">New and edited jobs go live after our team's review (usually within 24 hours).</p>
+    </form></div>
+  </div>
+
+  <div class="dash-panel" id="panel-apps">
+    <select id="appJobSel"><option value="">Select a job to view applications…</option></select>
+    <div id="appsList"></div>
+  </div>
+
+  <div class="dash-panel" id="panel-profile">
+    <div class="form-card"><form id="profileForm">
+      <div class="form-2col">
+        <div class="field"><label>Company name *</label><input id="pCompany" required></div>
+        <div class="field"><label>Contact person *</label><input id="pName" required></div>
+        <div class="field"><label>Phone</label><input id="pPhone"></div>
+        <div class="field"><label>Website</label><input id="pWebsite" placeholder="https://"></div>
+      </div>
+      <button class="btn primary" type="submit">Save Profile</button>
+    </form></div>
+  </div>
+</div>
+
+<div class="dash-wrap" id="loadingWrap"><p class="empty">Checking login…</p></div>
+
+<script>
+(function(){
+  var menu=document.getElementById('menu'),nav=document.getElementById('navlinks');
+  menu.addEventListener('click',function(){var o=nav.classList.toggle('open');menu.textContent=o?'×':'☰'});
+
+  function cfgOk(){return window.AV_SUPABASE_URL && window.AV_SUPABASE_URL.indexOf('PASTE_')!==0;}
+  if(!cfgOk()){document.getElementById('loadingWrap').innerHTML='<p class="empty">Portal setup abhi baaki hai.</p>';return;}
+  var sb=window.supabase.createClient(window.AV_SUPABASE_URL,window.AV_SUPABASE_ANON_KEY);
+
+  var errB=document.getElementById('dashErr'),okB=document.getElementById('dashOk');
+  function err(m){errB.style.display='block';errB.textContent=m;okB.style.display='none';window.scrollTo({top:0,behavior:'smooth'});}
+  function ok(m){okB.style.display='block';okB.textContent=m;errB.style.display='none';}
+  function clearMsg(){errB.style.display='none';okB.style.display='none';}
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+  var user=null,profile=null,myJobs=[];
+
+  // tabs
+  document.querySelectorAll('.dash-tabs button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.dash-tabs button').forEach(function(x){x.classList.remove('active')});
+      b.classList.add('active');clearMsg();
+      document.querySelectorAll('.dash-panel').forEach(function(p){p.classList.remove('active')});
+      document.getElementById('panel-'+b.getAttribute('data-tab')).classList.add('active');
+    });
+  });
+  function goTab(name){document.querySelector('.dash-tabs button[data-tab="'+name+'"]').click();}
+
+  document.getElementById('logoutBtn').addEventListener('click',function(){
+    sb.auth.signOut().then(function(){window.location.replace('employer.html');});
+  });
+
+  sb.auth.getSession().then(function(r){
+    if(!r.data.session){window.location.replace('employer.html');return;}
+    user=r.data.session.user;
+    return sb.from('employer_profiles').select('*').eq('id',user.id).maybeSingle();
+  }).then(function(p){
+    if(!p||p.error) throw (p&&p.error)||new Error('load');
+    if(!p.data){return sb.auth.signOut().then(function(){window.location.replace('employer.html');});}
+    profile=p.data;
+    document.getElementById('coName').textContent=profile.company_name;
+    document.getElementById('loadingWrap').style.display='none';
+    document.getElementById('dashWrap').style.display='block';
+    fillProfile();loadJobs();
+  }).catch(function(e){err('Could not load dashboard. Please login again.');});
+
+  function fillProfile(){
+    document.getElementById('pCompany').value=profile.company_name||'';
+    document.getElementById('pName').value=profile.contact_person||'';
+    document.getElementById('pPhone').value=profile.phone||'';
+    document.getElementById('pWebsite').value=profile.website||'';
+  }
+
+  function loadJobs(){
+    sb.from('jobs').select('*').eq('employer_id',user.id).order('created_at',{ascending:false})
+    .then(function(r){
+      if(r.error) throw r.error;
+      myJobs=r.data||[];renderJobs();fillAppSelect();
+    }).catch(function(e){document.getElementById('jobsList').innerHTML='<p class="empty">Could not load jobs.</p>';});
+  }
+
+  function statusBadge(s){return '<span class="st st-'+s+'">'+s+'</span>';}
+
+  function renderJobs(){
+    var box=document.getElementById('jobsList');
+    if(!myJobs.length){box.innerHTML='<p class="empty">No jobs yet. Click "+ Post New Job" to publish your first opening.</p>';return;}
+    box.innerHTML=myJobs.map(function(j){
+      return '<div class="job-row"><div><h4>'+esc(j.title)+statusBadge(j.status)+'</h4>'
+      +'<div class="meta">'+esc(j.location||'')+(j.job_type?' · '+esc(j.job_type):'')+(j.created_at?' · '+esc(j.created_at.slice(0,10)):'')+'</div></div>'
+      +'<div class="row-actions"><button class="btn-sm" data-edit="'+j.id+'" type="button">Edit</button>'
+      +'<button class="btn-sm danger" data-del="'+j.id+'" type="button">Delete</button></div></div>';
+    }).join('');
+    box.querySelectorAll('[data-edit]').forEach(function(b){b.addEventListener('click',function(){startEdit(b.getAttribute('data-edit'))});});
+    box.querySelectorAll('[data-del]').forEach(function(b){b.addEventListener('click',function(){delJob(b.getAttribute('data-del'))});});
+  }
+
+  function startEdit(id){
+    var j=null;myJobs.forEach(function(x){if(x.id===id)j=x;});if(!j)return;
+    document.getElementById('jId').value=j.id;
+    document.getElementById('jTitle').value=j.title||'';
+    document.getElementById('jLocation').value=j.location||'';
+    document.getElementById('jType').value=j.job_type||'Full-time';
+    document.getElementById('jCat').value=j.category||'data analyst';
+    document.getElementById('jExp').value=j.experience||'';
+    document.getElementById('jSalary').value=j.salary_range||'';
+    document.getElementById('jDesc').value=j.description||'';
+    document.getElementById('jApply').value=j.apply_email||'';
+    document.getElementById('jobSubmitBtn').textContent='Save Changes (re-review) →';
+    document.getElementById('cancelEdit').style.display='inline-block';
+    goTab('post');window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.getElementById('cancelEdit').addEventListener('click',function(){
+    document.getElementById('jobForm').reset();document.getElementById('jId').value='';
+    document.getElementById('jobSubmitBtn').textContent='Submit for Review →';this.style.display='none';goTab('jobs');
+  });
+
+  function delJob(id){
+    if(!confirm('Delete this job posting permanently?'))return;clearMsg();
+    sb.from('jobs').delete().eq('id',id).eq('employer_id',user.id).then(function(r){
+      if(r.error) throw r.error;ok('Job deleted.');loadJobs();
+    }).catch(function(e){err('Delete failed: '+(e.message||''));});
+  }
+
+  document.getElementById('jobForm').addEventListener('submit',function(e){
+    e.preventDefault();clearMsg();
+    var btn=document.getElementById('jobSubmitBtn');btn.disabled=true;
+    function v(id){return document.getElementById(id).value.trim();}
+    var payload={employer_id:user.id,title:v('jTitle'),company:profile.company_name,
+      location:v('jLocation')||null,job_type:v('jType'),category:v('jCat'),
+      experience:v('jExp')||null,salary_range:v('jSalary')||null,
+      description:v('jDesc'),apply_email:v('jApply'),status:'pending'};
+    var id=v('jId');
+    var q=id?sb.from('jobs').update(payload).eq('id',id).eq('employer_id',user.id)
+           :sb.from('jobs').insert(payload);
+    q.then(function(r){
+      if(r.error) throw r.error;
+      ok(id?'Changes saved — job wapas review me chala gaya hai.':'Job submitted! Review ke baad live hoga (usually 24 hours).');
+      document.getElementById('jobForm').reset();document.getElementById('jId').value='';
+      btn.textContent='Submit for Review →';document.getElementById('cancelEdit').style.display='none';
+      btn.disabled=false;loadJobs();goTab('jobs');
+    }).catch(function(er){err('Save failed: '+(er.message||''));btn.disabled=false;});
+  });
+
+  function fillAppSelect(){
+    var sel=document.getElementById('appJobSel');
+    sel.innerHTML='<option value="">Select a job to view applications…</option>'
+      +myJobs.map(function(j){return '<option value="'+j.id+'">'+esc(j.title)+' ('+j.status+')</option>';}).join('');
+  }
+  document.getElementById('appsList').addEventListener('click',function(e){
+    var b=e.target.closest?e.target.closest('[data-cvpath]'):null;if(!b)return;
+    b.disabled=true;var orig=b.textContent;b.textContent='Opening...';
+    sb.storage.from('cvs').createSignedUrl(b.getAttribute('data-cvpath'),3600)
+    .then(function(r){if(r.error)throw r.error;window.open(r.data.signedUrl,'_blank');})
+    .catch(function(){alert('Could not open the CV. Please try again.');})
+    .then(function(){b.disabled=false;b.textContent=orig;});
+  });
+  document.getElementById('appJobSel').addEventListener('change',function(){
+    var id=this.value,box=document.getElementById('appsList');
+    if(!id){box.innerHTML='';return;}
+    box.innerHTML='<p class="empty">Loading applications…</p>';
+    sb.from('applications').select('*').eq('job_id',id).order('created_at',{ascending:false})
+    .then(function(r){
+      if(r.error) throw r.error;
+      var apps=r.data||[];
+      if(!apps.length){box.innerHTML='<p class="empty">No applications yet for this job.</p>';return;}
+      box.innerHTML=apps.map(function(a){
+        return '<div class="app-card"><h4>'+esc(a.name)+'</h4><div class="meta">'
+        +'Email: <a href="mailto:'+esc(a.email)+'">'+esc(a.email)+'</a><br>'
+        +(a.phone?'Phone: '+esc(a.phone)+'<br>':'')
+        +(a.grad_year?'Graduation: '+esc(a.grad_year)+'<br>':'')
+        +(a.cv_storage_path?'CV: <button class="linkbtn" data-cvpath="'+esc(a.cv_storage_path)+'">Open resume</button><br>':'')
+        +(a.cv_link?'CV: <a href="'+esc(a.cv_link)+'" target="_blank" rel="noopener">Open resume</a><br>':'')
+        +(a.note?'Note: '+esc(a.note)+'<br>':'')
+        +'Applied: '+esc((a.created_at||'').slice(0,10))+'</div></div>';
+      }).join('');
+    }).catch(function(e){box.innerHTML='<p class="empty">Could not load applications.</p>';});
+  });
+
+  document.getElementById('profileForm').addEventListener('submit',function(e){
+    e.preventDefault();clearMsg();
+    var payload={company_name:document.getElementById('pCompany').value.trim(),
+      contact_person:document.getElementById('pName').value.trim(),
+      phone:document.getElementById('pPhone').value.trim()||null,
+      website:document.getElementById('pWebsite').value.trim()||null};
+    sb.from('employer_profiles').update(payload).eq('id',user.id).then(function(r){
+      if(r.error) throw r.error;profile=Object.assign(profile,payload);
+      document.getElementById('coName').textContent=profile.company_name;ok('Profile saved.');
+    }).catch(function(er){err('Save failed: '+(er.message||''));});
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Employer Login — AI Viddya Jobs</title>
+<meta name="description" content="Employer login for AI Viddya jobs portal." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=20261014f">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<style>
+.auth-wrap{max-width:480px;margin:0 auto;padding:56px 20px 90px}
+.auth-card{background:rgba(255,255,255,.05);border:1px solid rgba(34,211,238,.22);border-radius:18px;padding:30px 28px}
+.auth-tabs{display:flex;gap:8px;margin-bottom:22px}
+.auth-tabs button{flex:1;padding:11px;border-radius:10px;border:1px solid rgba(34,211,238,.25);background:transparent;color:var(--ink);font-weight:700;cursor:pointer;font-size:14.5px}
+.auth-tabs button.active{background:#22d3ee;color:#0b2b36;border-color:#22d3ee}
+.auth-form{display:none}
+.auth-form.active{display:block}
+.auth-note{font-size:13.5px;color:var(--muted);margin-top:14px;text-align:center}
+.auth-err{display:none;background:rgba(255,90,90,.1);border:1px solid rgba(255,90,90,.4);color:#ff9d9d;border-radius:10px;padding:10px 14px;font-size:14px;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="utility"><div class="wrap"><span><span class="status-dot"></span>Admissions & business enquiries open</span><div class="utility-links"><span>Mon–Fri · 9:00 AM–5:00 PM</span><a href="tel:+918088569153">+91 80885 69153</a><a href="mailto:info@aividdya.com">info@aividdya.com</a></div></div></div>
+<header><nav class="wrap"><a class="brand" href="index.html" aria-label="AI Viddya home"><span class="brand-mark">AI</span><span>AI Viddya</span></a><div class="navlinks" id="navlinks"><a href="index.html">Home</a><a href="why-us.html">Why us</a><a href="programs.html">Programs</a><a href="solutions.html">Solutions</a><a href="jobs.html" class="active">Jobs</a><a href="about.html">About</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a></div><a class="nav-cta" href="contact.html">Talk to us →</a><button class="menu" id="menu" aria-label="Open navigation" aria-expanded="false">☰</button></nav></header>
+
+<div class="auth-wrap">
+  <div style="text-align:center;margin-bottom:22px">
+    <div class="kicker">For employers</div>
+    <h1 style="margin:8px 0 6px">Hire from AI Viddya</h1>
+    <p style="color:var(--muted);font-size:14.5px;margin:0">Post jobs, manage listings, view applications.</p>
+  </div>
+  <div class="auth-card">
+    <div class="auth-tabs">
+      <button id="tabLogin" class="active" type="button">Login</button>
+      <button id="tabSignup" type="button">Create account</button>
+    </div>
+    <div class="auth-err" id="authErr"></div>
+
+    <form class="auth-form active" id="loginForm">
+      <div class="field"><label>Work email</label><input id="liEmail" type="email" required autocomplete="email"></div>
+      <div class="field"><label>Password</label><input id="liPass" type="password" required autocomplete="current-password"></div>
+      <button class="btn primary" type="submit" style="width:100%">Login →</button>
+    </form>
+
+    <form class="auth-form" id="signupForm">
+      <div class="field"><label>Company name *</label><input id="suCompany" required></div>
+      <div class="field"><label>Your name (contact person) *</label><input id="suName" required></div>
+      <div class="field"><label>Phone</label><input id="suPhone" inputmode="tel"></div>
+      <div class="field"><label>Work email *</label><input id="suEmail" type="email" required autocomplete="email"></div>
+      <div class="field"><label>Password *</label><input id="suPass" type="password" required minlength="6" autocomplete="new-password" placeholder="Min 6 characters"></div>
+      <button class="btn primary" type="submit" style="width:100%">Create employer account →</button>
+      <p class="auth-note">Posting is free. Every job goes live after a quick review by our team.</p>
+    </form>
+  </div>
+  <p class="auth-note"><a href="jobs.html" style="color:#22d3ee">← Back to jobs</a></p>
+</div>
+
+<footer><div class="wrap"><div class="footer-grid"><div><div class="footer-brand">AI Viddya</div><p style="max-width:340px">Practical Data Science, AI/ML and Generative AI learning in Whitefield, Bengaluru.</p></div><div class="footer-col"><h3>Contact</h3><a href="tel:+918088569153">+91 80885 69153</a><a href="mailto:info@aividdya.com">info@aividdya.com</a><span style="font-size:14px">Whitefield, Bengaluru</span></div></div><div class="copyright"><span>© 2026 AI Viddya. All Rights Reserved.</span><span>Practical learning. Industry perspective.</span></div></div></footer>
+
+<script>
+(function(){
+  var menu=document.getElementById('menu'),nav=document.getElementById('navlinks');
+  menu.addEventListener('click',function(){var o=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(o));menu.textContent=o?'×':'☰'});
+
+  function cfgOk(){return window.AV_SUPABASE_URL && window.AV_SUPABASE_URL.indexOf('PASTE_')!==0;}
+  var errBox=document.getElementById('authErr');
+  function showErr(m){errBox.style.display='block';errBox.textContent=m;}
+  function hideErr(){errBox.style.display='none';}
+
+  var tabL=document.getElementById('tabLogin'),tabS=document.getElementById('tabSignup');
+  var fL=document.getElementById('loginForm'),fS=document.getElementById('signupForm');
+  tabL.addEventListener('click',function(){tabL.classList.add('active');tabS.classList.remove('active');fL.classList.add('active');fS.classList.remove('active');hideErr();});
+  tabS.addEventListener('click',function(){tabS.classList.add('active');tabL.classList.remove('active');fS.classList.add('active');fL.classList.remove('active');hideErr();});
+
+  if(!cfgOk()){showErr('Portal setup abhi baaki hai — team jald live karegi.');return;}
+  var sb=window.supabase.createClient(window.AV_SUPABASE_URL,window.AV_SUPABASE_ANON_KEY);
+
+  // already logged in → dashboard
+  sb.auth.getSession().then(function(r){
+    if(r.data.session) window.location.replace('employer-dashboard.html');
+  });
+
+  function goDash(){window.location.replace('employer-dashboard.html');}
+
+  fL.addEventListener('submit',function(e){
+    e.preventDefault();hideErr();
+    var btn=this.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='Logging in...';
+    sb.auth.signInWithPassword({email:document.getElementById('liEmail').value.trim(),password:document.getElementById('liPass').value})
+    .then(function(res){
+      if(res.error) throw res.error;
+      return sb.from('employer_profiles').select('id').eq('id',res.data.user.id).maybeSingle();
+    })
+    .then(function(p){
+      if(p.error) throw p.error;
+      if(!p.data){return sb.auth.signOut().then(function(){throw new Error('No employer profile found for this login. Please create an employer account.')});}
+      goDash();
+    })
+    .catch(function(er){showErr(er.message||'Login failed.');btn.disabled=false;btn.textContent='Login →';});
+  });
+
+  fS.addEventListener('submit',function(e){
+    e.preventDefault();hideErr();
+    var btn=this.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='Creating account...';
+    var company=document.getElementById('suCompany').value.trim(),
+        name=document.getElementById('suName').value.trim(),
+        phone=document.getElementById('suPhone').value.trim(),
+        email=document.getElementById('suEmail').value.trim(),
+        pass=document.getElementById('suPass').value;
+    sb.auth.signUp({email:email,password:pass})
+    .then(function(res){
+      if(res.error) throw res.error;
+      var user=res.data.user||(res.data.session&&res.data.session.user);
+      if(!user) throw new Error('Please check your email to confirm, then login.');
+      return sb.from('employer_profiles').insert({id:user.id,company_name:company,contact_person:name,phone:phone||null})
+        .then(function(ins){if(ins.error) throw ins.error;});
+    })
+    .then(goDash)
+    .catch(function(er){showErr(er.message||'Signup failed.');btn.disabled=false;btn.textContent='Create employer account →';});
+  });
+})();
+</script>
+</body>
+</html>
