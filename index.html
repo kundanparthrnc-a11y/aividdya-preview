@@ -85,8 +85,7 @@
           var cards=document.querySelectorAll('#leStage .le-card');
           for(var idx=0;idx<cards.length;idx++){
             (function(card,idx){
-              var warm=card.classList.contains('warm');
-              var col=warm?'#0891b2':'#67e8f9';
+              var col='#22d3ee';
               var r=card.getBoundingClientRect();
               var right=card.getAttribute('data-port')==='right';
               /* dot center: dot is 10px at top:50% with -5px offsets => x=border edge -/+1 */
