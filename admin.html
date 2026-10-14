@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — AI Viddya</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="supabase-config.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#f1f5f9;color:#0f172a;min-height:100vh}
+/* === LOGIN === */
+.login-wrap{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#0a2530,#061820);padding:20px}
+.login-card{background:#fff;border-radius:24px;padding:48px;width:100%;max-width:440px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+.login-card .logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#0891b2,#22d3ee);display:grid;place-items:center;color:#fff;font-weight:800;font-size:20px;font-family:Manrope;margin-bottom:20px}
+.login-card h1{font-family:Manrope;font-size:26px;margin-bottom:8px}
+.login-card p{color:#64748b;font-size:14px;margin-bottom:28px}
+/* === LAYOUT === */
+.app{display:none;min-height:100vh}
+.sidebar{width:260px;background:#0a1628;color:#cbd5e1;position:fixed;top:0;left:0;bottom:0;display:flex;flex-direction:column;z-index:100}
+.sb-brand{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:12px}
+.sb-brand .mk{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#0891b2,#22d3ee);display:grid;place-items:center;color:#fff;font-weight:800;font-family:Manrope}
+.sb-brand strong{color:#fff;font-family:Manrope;font-size:17px;display:block}
+.sb-brand small{font-size:11px;color:#64748b}
+.sb-nav{flex:1;padding:16px 12px;overflow-y:auto}
+.sb-link{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;color:#94a3b8;text-decoration:none;font-size:14.5px;font-weight:500;margin-bottom:4px;cursor:pointer;border:0;background:none;width:100%;font-family:inherit;text-align:left}
+.sb-link:hover{background:rgba(255,255,255,.06);color:#fff}
+.sb-link.active{background:linear-gradient(135deg,#0891b2,#06708a);color:#fff}
+.sb-link .ic{font-size:18px;width:24px;text-align:center}
+.sb-link .bdg{margin-left:auto;background:#ef4444;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px}
+.sb-foot{padding:16px;border-top:1px solid rgba(255,255,255,.08)}
+.main{margin-left:260px;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid #e2e8f0;padding:16px 32px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50}
+.topbar h2{font-family:Manrope;font-size:20px}
+.topbar .user{display:flex;align-items:center;gap:12px}
+.topbar .av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#0891b2,#22d3ee);display:grid;place-items:center;color:#fff;font-weight:700}
+.content{padding:32px;max-width:1280px}
+/* === CARDS & STATS === */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:28px}
+.stat{background:#fff;border-radius:16px;padding:24px;border:1px solid #e2e8f0;position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;top:0;left:0;right:0;height:4px}
+.stat.b1:after{background:#0891b2}.stat.b2:after{background:#f59e0b}.stat.b3:after{background:#10b981}.stat.b4:after{background:#8b5cf6}
+.stat .n{font-family:Manrope;font-size:34px;font-weight:800}
+.stat .l{font-size:13px;color:#64748b;margin-top:4px}
+.stat .t{font-size:12px;margin-top:8px;font-weight:600}
+.stat .t.up{color:#10b981}.stat .t.dn{color:#ef4444}
+.card{background:#fff;border-radius:16px;border:1px solid #e2e8f0;margin-bottom:24px;overflow:hidden}
+.card-h{padding:20px 24px;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.card-h h3{font-family:Manrope;font-size:16px}
+.card-b{padding:24px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:1100px){.grid2{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+/* === TABLES === */
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;padding:12px 16px;color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid #f1f5f9;font-weight:600}
+.tbl td{padding:14px 16px;border-bottom:1px solid #f8fafc;vertical-align:middle}
+.tbl tr:hover td{background:#f8fafc}
+.pill{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.pill.pending{background:#fef3c7;color:#92400e}
+.pill.approved,.pill.live{background:#d1fae5;color:#065f46}
+.pill.rejected{background:#fee2e2;color:#991b1b}
+.pill.new{background:#dbeafe;color:#1e40af}
+.pill.contacted{background:#fef3c7;color:#92400e}
+.pill.converted{background:#d1fae5;color:#065f46}
+/* === BUTTONS & INPUTS === */
+.btn{padding:10px 20px;border-radius:10px;border:0;font-weight:600;font-size:14px;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-p{background:linear-gradient(135deg,#0891b2,#06708a);color:#fff}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(8,145,178,.35)}
+.btn-g{background:#f1f5f9;color:#334155}
+.btn-g:hover{background:#e2e8f0}
+.btn-ok{background:#d1fae5;color:#065f46}.btn-ok:hover{background:#a7f3d0}
+.btn-no{background:#fee2e2;color:#991b1b}.btn-no:hover{background:#fecaca}
+.btn-s{padding:7px 14px;font-size:13px}
+.inp{padding:11px 15px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;width:100%;background:#fff;color:#0f172a}
+.inp:focus{outline:none;border-color:#0891b2;box-shadow:0 0 0 3px rgba(8,145,178,.12)}
+select.inp{width:auto}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.search{position:relative}
+.search input{padding-left:38px;width:260px}
+.search:before{content:"🔍";position:absolute;left:13px;top:50%;transform:translateY(-50%)}
+/* === PANELS === */
+.panel{display:none}.panel.active{display:block}
+.empty{text-align:center;padding:60px 20px;color:#94a3b8}
+.empty .ic{font-size:48px;margin-bottom:12px}
+/* === TOAST === */
+.toast{position:fixed;bottom:24px;right:24px;background:#0f172a;color:#fff;padding:14px 22px;border-radius:12px;font-size:14px;font-weight:500;z-index:999;display:none;box-shadow:0 12px 32px rgba(0,0,0,.25)}
+.toast.show{display:block;animation:slideIn .3s}
+.toast.ok{border-left:4px solid #10b981}.toast.err{border-left:4px solid #ef4444}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:none;opacity:1}}
+/* === MOBILE === */
+.mb-menu{display:none}
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);transition:transform .3s}
+  .sidebar.open{transform:none}
+  .main{margin-left:0}
+  .mb-menu{display:block;background:none;border:0;font-size:24px;cursor:pointer;color:#0f172a}
+  .content{padding:20px 16px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .topbar{padding:14px 16px}
+  .tbl{font-size:13px}.tbl th,.tbl td{padding:10px 8px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <div class="logo">AI</div>
+    <h1>Admin Panel</h1>
+    <p>AI Viddya control center — authorized access only.</p>
+    <div id="loginErr" style="display:none;background:#fee2e2;color:#991b1b;padding:12px 16px;border-radius:10px;margin-bottom:16px;font-size:14px"></div>
+    <form id="loginForm">
+      <div style="margin-bottom:14px"><input class="inp" id="adEmail" type="email" placeholder="Admin email" required autocomplete="email"></div>
+      <div style="margin-bottom:20px"><input class="inp" id="adPass" type="password" placeholder="Password" required autocomplete="current-password"></div>
+      <button type="submit" class="btn btn-p" style="width:100%;padding:14px;font-size:15px">Login to Dashboard →</button>
+    </form>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-brand"><div class="mk">AI</div><div><strong>AI Viddya</strong><small>Admin Control</small></div></div>
+    <nav class="sb-nav">
+      <button class="sb-link active" data-p="dash"><span class="ic">📊</span>Dashboard</button>
+      <button class="sb-link" data-p="jobs"><span class="ic">💼</span>Jobs<span class="bdg" id="bdgPending" style="display:none">0</span></button>
+      <button class="sb-link" data-p="leads"><span class="ic">📩</span>Leads<span class="bdg" id="bdgLeads" style="display:none">0</span></button>
+      <button class="sb-link" data-p="employers"><span class="ic">🏢</span>Employers</button>
+      <button class="sb-link" data-p="apps"><span class="ic">📝</span>Applications</button>
+    </nav>
+    <div class="sb-foot"><button class="sb-link" id="logoutBtn" style="width:100%"><span class="ic">🚪</span>Logout</button></div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:14px">
+        <button class="mb-menu" id="mbMenu">☰</button>
+        <h2 id="pageTitle">Dashboard</h2>
+      </div>
+      <div class="user"><div class="av" id="userAv">A</div><span id="userEmail" style="font-size:14px;color:#64748b"></span></div>
+    </div>
+
+    <div class="content">
+      <!-- DASHBOARD -->
+      <div class="panel active" id="p-dash">
+        <div class="stats">
+          <div class="stat b1"><div class="n" id="sJobs">—</div><div class="l">Total Jobs Posted</div></div>
+          <div class="stat b2"><div class="n" id="sPending">—</div><div class="l">Pending Review</div></div>
+          <div class="stat b3"><div class="n" id="sLeads">—</div><div class="l">Total Leads</div></div>
+          <div class="stat b4"><div class="n" id="sApps">—</div><div class="l">Applications</div></div>
+        </div>
+        <div class="grid2">
+          <div class="card"><div class="card-h"><h3>📈 Leads (last 7 days)</h3></div><div class="card-b"><canvas id="chLeads" height="220"></canvas></div></div>
+          <div class="card"><div class="card-h"><h3>💼 Jobs by Status</h3></div><div class="card-b"><canvas id="chJobs" height="220"></canvas></div></div>
+        </div>
+        <div class="card"><div class="card-h"><h3>🕐 Recent Activity</h3></div><div class="card-b" id="recentAct"><p style="color:#94a3b8">Loading…</p></div></div>
+      </div>
+
+      <!-- JOBS -->
+      <div class="panel" id="p-jobs">
+        <div class="card">
+          <div class="card-h">
+            <h3>Job Moderation</h3>
+            <div class="toolbar">
+              <div class="search"><input class="inp" id="jobSearch" placeholder="Search jobs…"></div>
+              <select class="inp" id="jobFilter"><option value="pending">⏳ Pending</option><option value="approved">✅ Live</option><option value="rejected">❌ Rejected</option><option value="all">All</option></select>
+            </div>
+          </div>
+          <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Job Title</th><th>Company</th><th>Location</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="jobsTbl"><tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:40px">Loading…</td></tr></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- LEADS -->
+      <div class="panel" id="p-leads">
+        <div class="card">
+          <div class="card-h">
+            <h3>Lead Management</h3>
+            <div class="toolbar">
+              <div class="search"><input class="inp" id="leadSearch" placeholder="Search leads…"></div>
+              <select class="inp" id="leadFilter"><option value="all">All Status</option><option value="new">New</option><option value="contacted">Contacted</option><option value="converted">Converted</option></select>
+              <button class="btn btn-g btn-s" onclick="exportLeads()">📥 Export CSV</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Name</th><th>Contact</th><th>Interest</th><th>Source</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="leadsTbl"><tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:40px">Loading…</td></tr></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- EMPLOYERS -->
+      <div class="panel" id="p-employers">
+        <div class="card">
+          <div class="card-h"><h3>Registered Employers</h3><div class="search"><input class="inp" id="empSearch" placeholder="Search employers…"></div></div>
+          <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Company</th><th>Contact Person</th><th>Email</th><th>Jobs Posted</th><th>Joined</th></tr></thead><tbody id="empTbl"><tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:40px">Loading…</td></tr></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- APPLICATIONS -->
+      <div class="panel" id="p-apps">
+        <div class="card">
+          <div class="card-h"><h3>Job Applications</h3></div>
+          <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Applicant</th><th>Job</th><th>Company</th><th>Date</th><th>Resume</th></tr></thead><tbody id="appsTbl"><tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:40px">Loading…</td></tr></tbody></table></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var sb=null, charts={};
+function toast(m,ok){var t=document.getElementById('toast');t.textContent=m;t.className='toast show '+(ok===false?'err':'ok');setTimeout(function(){t.className='toast'},3500);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function dstr(d){return d?new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short'}):'—';}
+
+// Nav
+document.querySelectorAll('.sb-link[data-p]').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.sb-link').forEach(function(x){x.classList.remove('active')});
+    b.classList.add('active');
+    document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('active')});
+    document.getElementById('p-'+b.dataset.p).classList.add('active');
+    document.getElementById('pageTitle').textContent=b.textContent.trim().replace(/^\S+\s/,'');
+    document.getElementById('sidebar').classList.remove('open');
+  });
+});
+document.getElementById('mbMenu').addEventListener('click',function(){document.getElementById('sidebar').classList.toggle('open');});
+
+// Login
+document.getElementById('loginForm').addEventListener('submit',async function(e){
+  e.preventDefault();
+  var le=document.getElementById('loginErr');le.style.display='none';
+  try{
+    if(typeof AV_SUPABASE_URL==='undefined'||!AV_SUPABASE_URL||AV_SUPABASE_URL.indexOf('YOUR')===0)throw new Error('Supabase not configured.');
+    sb=supabase.createClient(AV_SUPABASE_URL,AV_SUPABASE_ANON_KEY);
+    var r=await sb.auth.signInWithPassword({email:document.getElementById('adEmail').value.trim(),password:document.getElementById('adPass').value});
+    if(r.error)throw r.error;
+    var a=await sb.from('admins').select('id').eq('user_id',r.data.user.id).limit(1);
+    if(a.error||!a.data.length){await sb.auth.signOut();throw new Error('Not authorized as admin.');}
+    document.getElementById('userEmail').textContent=r.data.user.email;
+    document.getElementById('userAv').textContent=r.data.user.email.charAt(0).toUpperCase();
+    document.getElementById('loginWrap').style.display='none';
+    document.getElementById('app').style.display='block';
+    loadAll();
+  }catch(ex){le.textContent=ex.message;le.style.display='block';}
+});
+document.getElementById('logoutBtn').addEventListener('click',async function(){if(sb)await sb.auth.signOut();location.reload();});
+
+async function loadAll(){await Promise.all([loadStats(),loadJobs(),loadLeads(),loadEmployers(),loadApps(),loadCharts(),loadRecent()]);}
+
+async function loadStats(){
+  try{
+    var j=await sb.from('jobs').select('id',{count:'exact',head:true});
+    var p=await sb.from('jobs').select('id',{count:'exact',head:true}).eq('status','pending');
+    var l=await sb.from('leads').select('id',{count:'exact',head:true});
+    var a=await sb.from('applications').select('id',{count:'exact',head:true});
+    document.getElementById('sJobs').textContent=j.count||0;
+    document.getElementById('sPending').textContent=p.count||0;
+    document.getElementById('sLeads').textContent=l.count||0;
+    document.getElementById('sApps').textContent=a.count||0;
+    var b=document.getElementById('bdgPending');
+    if(p.count>0){b.textContent=p.count;b.style.display='inline-block';}else b.style.display='none';
+    var ln=await sb.from('leads').select('id',{count:'exact',head:true}).eq('status','new');
+    var bl=document.getElementById('bdgLeads');
+    if(ln.count>0){bl.textContent=ln.count;bl.style.display='inline-block';}else bl.style.display='none';
+  }catch(e){}
+}
+
+// JOBS
+var allJobs=[];
+async function loadJobs(){
+  var tb=document.getElementById('jobsTbl');
+  try{
+    var r=await sb.from('jobs').select('id,title,company_name,location,status,created_at').order('created_at',{ascending:false}).limit(200);
+    if(r.error)throw r.error;
+    allJobs=r.data;renderJobs();
+  }catch(e){tb.innerHTML='<tr><td colspan="6" style="color:#ef4444">Error: '+esc(e.message)+'</td></tr>';}
+}
+function renderJobs(){
+  var f=document.getElementById('jobFilter').value,q=document.getElementById('jobSearch').value.toLowerCase();
+  var rows=allJobs.filter(function(j){
+    return (f==='all'||j.status===f)&&(!q||(j.title+' '+j.company_name).toLowerCase().includes(q));
+  });
+  document.getElementById('jobsTbl').innerHTML=rows.length?rows.map(function(j){
+    var act=j.status==='pending'
+      ?'<button class="btn btn-ok btn-s" onclick="modJob(\''+j.id+'\',\'approved\')">✓ Approve</button> <button class="btn btn-no btn-s" onclick="modJob(\''+j.id+'\',\'rejected\')">✕ Reject</button>'
+      :j.status==='approved'?'<button class="btn btn-no btn-s" onclick="modJob(\''+j.id+'\',\'rejected\')">Remove</button>'
+      :'<button class="btn btn-ok btn-s" onclick="modJob(\''+j.id+'\',\'approved\')">Restore</button>';
+    return '<tr><td><strong>'+esc(j.title)+'</strong></td><td>'+esc(j.company_name||'—')+'</td><td>'+esc(j.location||'—')+'</td><td>'+dstr(j.created_at)+'</td><td><span class="pill '+j.status+'">'+j.status+'</span></td><td style="white-space:nowrap">'+act+'</td></tr>';
+  }).join(''):'<tr><td colspan="6"><div class="empty"><div class="ic">📭</div>No jobs found.</div></td></tr>';
+}
+async function modJob(id,st){
+  if(st==='rejected'&&!confirm('Are you sure?'))return;
+  try{var r=await sb.from('jobs').update({status:st}).eq('id',id);if(r.error)throw r.error;toast(st==='approved'?'Job approved — now live!':'Job updated.');loadJobs();loadStats();}catch(e){toast(e.message,false);}
+}
+document.getElementById('jobFilter').addEventListener('change',renderJobs);
+document.getElementById('jobSearch').addEventListener('input',renderJobs);
+
+// LEADS
+var allLeads=[];
+async function loadLeads(){
+  var tb=document.getElementById('leadsTbl');
+  try{
+    var r=await sb.from('leads').select('id,name,email,phone,interest,message,source,status,created_at').order('created_at',{ascending:false}).limit(200);
+    if(r.error)throw r.error;
+    allLeads=r.data;renderLeads();
+  }catch(e){tb.innerHTML='<tr><td colspan="7" style="color:#ef4444">Error: '+esc(e.message)+'</td></tr>';}
+}
+function renderLeads(){
+  var f=document.getElementById('leadFilter').value,q=document.getElementById('leadSearch').value.toLowerCase();
+  var rows=allLeads.filter(function(l){
+    return (f==='all'||l.status===f)&&(!q||(l.name+' '+l.email+' '+l.phone).toLowerCase().includes(q));
+  });
+  document.getElementById('leadsTbl').innerHTML=rows.length?rows.map(function(l){
+    return '<tr><td><strong>'+esc(l.name||'—')+'</strong></td><td>'+esc(l.email||'')+'<br><small style="color:#64748b">'+esc(l.phone||'')+'</small></td><td>'+esc(l.interest||'—')+'</td><td><small>'+esc(l.source||'')+'</small></td><td>'+dstr(l.created_at)+'</td><td><span class="pill '+(l.status||'new')+'">'+(l.status||'new')+'</span></td><td><select class="inp" style="padding:6px 10px;font-size:13px" onchange="setLeadStatus(\''+l.id+'\',this.value)"><option value="new"'+(l.status==='new'?' selected':'')+'>New</option><option value="contacted"'+(l.status==='contacted'?' selected':'')+'>Contacted</option><option value="converted"'+(l.status==='converted'?' selected':'')+'>Converted</option></select></td></tr>';
+  }).join(''):'<tr><td colspan="7"><div class="empty"><div class="ic">📭</div>No leads found.</div></td></tr>';
+}
+async function setLeadStatus(id,st){
+  try{var r=await sb.from('leads').update({status:st}).eq('id',id);if(r.error)throw r.error;toast('Lead marked as '+st);loadLeads();loadStats();}catch(e){toast(e.message,false);}
+}
+document.getElementById('leadFilter').addEventListener('change',renderLeads);
+document.getElementById('leadSearch').addEventListener('input',renderLeads);
+function exportLeads(){
+  var csv='Name,Email,Phone,Interest,Source,Status,Date\n'+allLeads.map(function(l){return [l.name,l.email,l.phone,l.interest,l.source,l.status,l.created_at].map(function(v){return '"'+String(v||'').replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+  var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='aividdya-leads.csv';a.click();
+  toast('Leads exported!');
+}
+
+// EMPLOYERS
+async function loadEmployers(){
+  var tb=document.getElementById('empTbl');
+  try{
+    var r=await sb.from('employer_profiles').select('user_id,company_name,contact_name,created_at').order('created_at',{ascending:false}).limit(100);
+    if(r.error)throw r.error;
+    var jc={};
+    var jr=await sb.from('jobs').select('employer_id').eq('status','approved');
+    if(jr.data)jr.data.forEach(function(j){jc[j.employer_id]=(jc[j.employer_id]||0)+1;});
+    var q=(document.getElementById('empSearch').value||'').toLowerCase();
+    var rows=r.data.filter(function(e){return !q||(e.company_name+' '+e.contact_name).toLowerCase().includes(q);});
+    tb.innerHTML=rows.length?rows.map(function(e){
+      return '<tr><td><strong>'+esc(e.company_name||'—')+'</strong></td><td>'+esc(e.contact_name||'—')+'</td><td>'+esc(e.user_id||'').substring(0,8)+'…</td><td>'+(jc[e.user_id]||0)+' jobs</td><td>'+dstr(e.created_at)+'</td></tr>';
+    }).join(''):'<tr><td colspan="5"><div class="empty">No employers yet.</div></td></tr>';
+  }catch(e){tb.innerHTML='<tr><td colspan="5" style="color:#ef4444">Error: '+esc(e.message)+'</td></tr>';}
+}
+document.getElementById('empSearch').addEventListener('input',loadEmployers);
+
+// APPLICATIONS
+async function loadApps(){
+  var tb=document.getElementById('appsTbl');
+  try{
+    var r=await sb.from('applications').select('id,applicant_name,applicant_email,created_at,job_id').order('created_at',{ascending:false}).limit(100);
+    if(r.error)throw r.error;
+    if(!r.data.length){tb.innerHTML='<tr><td colspan="5"><div class="empty">No applications yet.</div></td></tr>';return;}
+    var jids=[...new Set(r.data.map(function(a){return a.job_id;}))];
+    var jm={};
+    if(jids.length){var jr=await sb.from('jobs').select('id,title,company_name').in('id',jids);if(jr.data)jr.data.forEach(function(j){jm[j.id]=j;});}
+    tb.innerHTML=r.data.map(function(a){
+      var j=jm[a.job_id]||{};
+      return '<tr><td><strong>'+esc(a.applicant_name||'—')+'</strong><br><small style="color:#64748b">'+esc(a.applicant_email||'')+'</small></td><td>'+esc(j.title||'—')+'</td><td>'+esc(j.company_name||'—')+'</td><td>'+dstr(a.created_at)+'</td><td><span class="pill new">View in dashboard</span></td></tr>';
+    }).join('');
+  }catch(e){tb.innerHTML='<tr><td colspan="5" style="color:#ef4444">Error</td></tr>';}
+}
+
+// CHARTS
+async function loadCharts(){
+  try{
+    if(typeof Chart==='undefined')return;
+    // Leads last 7 days
+    var days=[],counts=[];
+    for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);days.push(d.toLocaleDateString('en-IN',{weekday:'short'}));
+      var ds=d.toISOString().split('T')[0];
+      var r=await sb.from('leads').select('id',{count:'exact',head:true}).gte('created_at',ds+'T00:00:00').lt('created_at',ds+'T23:59:59');
+      counts.push(r.count||0);}
+    if(charts.l)charts.l.destroy();
+    charts.l=new Chart(document.getElementById('chLeads'),{type:'bar',data:{labels:days,datasets:[{data:counts,backgroundColor:'#0891b2',borderRadius:6}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}});
+    // Jobs by status
+    var p=await sb.from('jobs').select('id',{count:'exact',head:true}).eq('status','pending');
+    var a=await sb.from('jobs').select('id',{count:'exact',head:true}).eq('status','approved');
+    var rj=await sb.from('jobs').select('id',{count:'exact',head:true}).eq('status','rejected');
+    if(charts.j)charts.j.destroy();
+    charts.j=new Chart(document.getElementById('chJobs'),{type:'doughnut',data:{labels:['Pending','Live','Rejected'],datasets:[{data:[p.count||0,a.count||0,rj.count||0],backgroundColor:['#f59e0b','#10b981','#ef4444']}]},options:{plugins:{legend:{position:'bottom'}}}});
+  }catch(e){}
+}
+
+// RECENT
+async function loadRecent(){
+  var box=document.getElementById('recentAct');
+  try{
+    var items=[];
+    var j=await sb.from('jobs').select('title,company_name,created_at').order('created_at',{ascending:false}).limit(5);
+    if(j.data)j.data.forEach(function(x){items.push({t:'💼 New job: <strong>'+esc(x.title)+'</strong> at '+esc(x.company_name),d:x.created_at});});
+    var l=await sb.from('leads').select('name,interest,created_at').order('created_at',{ascending:false}).limit(5);
+    if(l.data)l.data.forEach(function(x){items.push({t:'📩 New lead: <strong>'+esc(x.name)+'</strong> — '+esc(x.interest),d:x.created_at});});
+    items.sort(function(a,b){return new Date(b.d)-new Date(a.d);});
+    box.innerHTML=items.length?items.slice(0,8).map(function(i){return '<div style="padding:12px 0;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;gap:12px"><span style="font-size:14px">'+i.t+'</span><small style="color:#94a3b8;white-space:nowrap">'+dstr(i.d)+'</small></div>';}).join(''):'<p style="color:#94a3b8">No activity yet.</p>';
+  }catch(e){box.innerHTML='<p style="color:#94a3b8">—</p>';}
+}
+</script>
+</body>
+</html>
